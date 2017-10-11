@@ -34,7 +34,7 @@ using namespace std;
 //circle_cnt：图像中找到的圆的数目
 //max_circle：外部传入参数，圆的数目上限。如果图像中圆的数目超过此参数，根据差分值由大到小进行排序
 //返回值：MY_OK或者MY_FAIL
-int ustc_Find_Circles_By_Difference_new(
+int ustc_Find_Circles_By_Difference(
 	Mat colorImg,
 	int min_radius,
 	int max_radius,
