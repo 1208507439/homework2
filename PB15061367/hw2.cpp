@@ -74,8 +74,7 @@ int ustc_Find_Circles_By_Difference(
 	short count1b, count1g, count1r;
 	short count2b, count2g, count2r;
 	short x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-#define sub_trim 1<<10
-#define trim (sub_trim>>10)
+	int trim = 1;
 	short m, n, r, theta;
 	int _x[10000], _y[10000], _radius[10000], _count[10000], _diff[10000];    //距离相近点累加器
 	short _cos[360], _sin[360];
