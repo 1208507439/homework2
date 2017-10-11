@@ -1,3 +1,4 @@
+#include "SubImageMatch.h"
 float FindMax(float x, float y, float z)
 //find  the largest number in x,y,z
 {
