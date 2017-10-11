@@ -8,32 +8,21 @@
 #define MY_FAIL			-1
 #define PER_RAD			0.0174533
 
-#define IMG_SHOW
+//#define IMG_SHOW
 #define my_function 
 #define defense
 
 #define max_radiu_range	310
 #define max_row			700
 #define max_col			700
-int Circle_B[max_radiu_range][max_row][max_col] = {0};
-int Circle_G[max_radiu_range][max_row][max_col] = {0};
-int Circle_R[max_radiu_range][max_row][max_col]= {0};
+//无奈之举
+int Circle_B[max_radiu_range][max_row][max_col] ;
+int Circle_G[max_radiu_range][max_row][max_col] ;
+int Circle_R[max_radiu_range][max_row][max_col] ;
 
 using namespace cv;
 using namespace std;
 //功能说明：找到图像中所有圆心在图像内的圆，得到中心点和半径
-//colorImg：用来搜索圆形目标的彩色图像
-//min_radius：需要搜索的圆的最小半径
-//max_radius：需要搜索的圆的最大半径
-//min_center_dist：找到的圆心之间的最小距离
-//min_radius_dist：同心圆半径之间的最小差距
-//max_circle_diff：阈值，圆周差分值低于此阈值，不是圆
-//x：数组，存储所有的圆的中心点x坐标
-//y：数组，存储所有的圆的中心点y坐标
-//radius：数组，存储所有的圆的半径值
-//circle_cnt：图像中找到的圆的数目
-//max_circle：外部传入参数，圆的数目上限。如果图像中圆的数目超过此参数，根据差分值由大到小进行排序
-//返回值：MY_OK或者MY_FAIL
 int ustc_Find_Circles_By_Difference(
 	Mat colorImg,
 	int min_radius,
@@ -71,8 +60,8 @@ int ustc_Find_Circles_By_Difference(
 	}
 	if (colorImg.rows > 700 || colorImg.cols > 700 )
 	{
-		cout << " I am very sorry.Because of the This program only can find circle in 700*700 or smaller than it. \n\n " << endl;
-		return MY_FAIL;
+		cout << " I am very sorry.\nBecause of the this program only can find circle in 700*700 or smaller than it. \nWe can only find a part of circle\n " << endl;
+		//return MY_FAIL;
 	}
 	if (NULL == x || NULL == y || NULL == radius || NULL == circle_cnt)
 	{
@@ -129,7 +118,7 @@ int ustc_Find_Circles_By_Difference(
 				row_i -= circle_row_i;
 				circle_row_i = 0;//按理来说遍历少于360度的话，max_circle_diff是应该做一些改变的
 			}
-			for ( ; (circle_row_i - height < 0)&&(row_i < height); row_i++)
+			for ( ; (circle_row_i - height < 0)&&(row_i < height)&&(row_i < 700); row_i++)
 			{
 
 
@@ -142,7 +131,7 @@ int ustc_Find_Circles_By_Difference(
 				}
 				int location = 3 * (circle_row_i * width + circle_col_j);
 
-				for ( ; (circle_col_j - width < 0)&&(col_j <width); col_j++)
+				for ( ; (circle_col_j - width < 0)&&(col_j <width)&&(col_j < 700); col_j++)
 				{
 					Circle_B[radiu][row_i][col_j] += ImgData[location++];
 					Circle_G[radiu][row_i][col_j] += ImgData[location++];
@@ -156,9 +145,9 @@ int ustc_Find_Circles_By_Difference(
 
 	int diff[1000];
 	int circle_center_num = 0;
-	for (int row_i = 0; row_i < height; row_i++)
+	for (int row_i = 0; row_i < height && (row_i < 700); row_i++)
 	{
-		for (int col_j = 0; col_j < width; col_j++)
+		for (int col_j = 0; col_j < width && (col_j < 700); col_j++)
 		{
 			for (int radiu = min_radius; radiu < max_radius; radiu++)
 			{
