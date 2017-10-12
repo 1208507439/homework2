@@ -3,6 +3,10 @@
 #define MY_FAIL -1
 #define pi 3.1415926
 //#include"hw2.h"
+#include "opencv2/opencv.hpp"
+using namespace cv;
+#include <iostream>
+using namespace std;
 //功能说明：找到图像中所有圆心在图像内的圆，得到中心点和半径
 //colorImg：用来搜索圆形目标的彩色图像
 //min_radius：需要搜索的圆的最小半径
