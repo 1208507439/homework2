@@ -770,7 +770,6 @@ int handle_repeat(int* x, int* y, int* radius,int* totalbuff, int* len,int maxle
 	return 1;
 }
 
-
 int ustc_Find_Circles_By_Difference(	Mat colorImg,	int min_radius,	int max_radius,
 	int min_center_dist,	int min_radius_dist,	int max_circle_diff,
 	int* x,	int* y,	int* radius,int* len,int maxlen)
@@ -784,6 +783,11 @@ int ustc_Find_Circles_By_Difference(	Mat colorImg,	int min_radius,	int max_radiu
 		cout << "image read failed." << endl;
 		return -1;
 	}
+	int duplicate_x[1000] = { 0 };
+	int duplicate_y[1000] = { 0 };
+	int duplicate_radius[1000] = { 0 };
+	int duplicate_totalbuff[1000] = { 0 };
+	int duplicate_len[1] = { 0 };
 	int width = colorImg.cols;
 	int height = colorImg.rows;
 	Mat blueImg(height, width, CV_8UC1);
@@ -851,24 +855,29 @@ int ustc_Find_Circles_By_Difference(	Mat colorImg,	int min_radius,	int max_radiu
 				if ((total >= max_circle_diff))
 				{
 
-					x[count_circle + *len] = m;
-					y[count_circle + *len] = n;
-					radius[count_circle + *len] = i;
-					totalbuff[count_circle + *len] = total;
+					duplicate_x[count_circle + *duplicate_len] = m;
+					duplicate_y[count_circle + *duplicate_len] = n;
+					duplicate_radius[count_circle + *duplicate_len] = i;
+					duplicate_totalbuff[count_circle + *duplicate_len] = total;
 					count_circle++;
 					cout << "x:" << m << " y:" << n << " radius:" << i << " with total of:" << total << endl;
 				}
 			}
-			*len += count_circle;
+			*duplicate_len += count_circle;
 		}
 	}
 
 	cout << "computed" << endl;
-	flag=handle_repeat(x,y,radius,totalbuff,len,maxlen);
-	for (int i = 0; i < *len; i++) {
-		cout << "x:" << x[i] << " y:" << y[i] << " radius:" << radius[i] << " with total of:" << totalbuff[i] << endl;
+	flag=handle_repeat(duplicate_x, duplicate_y, duplicate_radius, duplicate_totalbuff, duplicate_len,maxlen);
+	for (int i = 0; i < *duplicate_len; i++) {
+		cout << "x:" << duplicate_x[i] << " y:" << duplicate_y[i] << " radius:" << duplicate_radius[i] << " with total of:" << duplicate_totalbuff[i] << endl;
+		x[i] = duplicate_x[i];
+		y[i] = duplicate_y[i];
+		radius[i] = duplicate_radius[i];
+		totalbuff[i] = duplicate_totalbuff[i];
 	}
-	cout << *len << " circles detected." << endl;
+	cout << *duplicate_len << " circles detected." << endl;
+	*len = *duplicate_len;
 	return 1;
 
 }
