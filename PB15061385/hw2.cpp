@@ -39,6 +39,12 @@ int ustc_Find_Circles_By_Difference(Mat colorImg, int min_radius, int max_radius
     if (rcmin < max_radius + 5) max_radius = rcmin - 5;
     if (min_radius > max_radius) return MY_FAIL;
     
+    if (max_circle_diff <= 0) return MY_FAIL;
+    if (max_circle_diff >= 255) {
+        (*circle_cnt) = 0;
+        return MY_OK;
+    }
+    
     //Start
     Mat srcImg;
     colorImg.convertTo(srcImg, CV_16UC3);
@@ -67,43 +73,22 @@ int ustc_Find_Circles_By_Difference(Mat colorImg, int min_radius, int max_radius
     for (radius_index = min_radius - 5; radius_index < min_radius + 5; radius_index++, top_point++) {
         angle_index = 0;
         
-        for (; angle_index < 90; angle_index++) {
-            subr[0] = (int) (radius_index * cos(angle_index * ANGLE_TO_PI)) + radius_index;
-            subr[1] = (int) (radius_index * sin(angle_index * ANGLE_TO_PI)) + radius_index;
+        for (; angle_index < 180; angle_index++) {
+            subr[0] = (int) (radius_index * cos(angle_index * ANGLE_TO_PI) + radius_index);
+            subr[1] = (int) (radius_index * sin(angle_index * ANGLE_TO_PI) + radius_index);
             subr[2] = cols - 2 * radius_index + subr[0];
             subr[3] = rows - 2 * radius_index + subr[1];
             srcImgROI = srcImg(Range(subr[1], subr[3]), Range(subr[0], subr[2]));
             SumImgROI = SumImg1[top_point](Range(radius_index, rows - radius_index),
                                            Range(radius_index, cols - radius_index));
             SumImgROI += srcImgROI;
-        }
-        for (; angle_index < 180; angle_index++) {
-            subr[1] = (int) (radius_index * sin(angle_index * ANGLE_TO_PI)) + radius_index;
-            subr[2] = (int) (cols + radius_index * cos(angle_index * ANGLE_TO_PI)) - radius_index;
-            subr[0] = subr[2] - cols + 2 * radius_index;
-            subr[3] = rows - 2 * radius_index + subr[1];
-            srcImgROI = srcImg(Range(subr[1], subr[3]), Range(subr[0], subr[2]));
-            SumImgROI = SumImg1[top_point](Range(radius_index, rows - radius_index),
-                                           Range(radius_index, cols - radius_index));
-            SumImgROI += srcImgROI;
-            
         }
         
-        for (; angle_index < 270; angle_index++) {
-            subr[2] = (int) (cols + radius_index * cos(angle_index * ANGLE_TO_PI)) - radius_index;
-            subr[3] = (int) (rows + radius_index * sin(angle_index * ANGLE_TO_PI)) - radius_index;
-            subr[0] = subr[2] - cols + 2 * radius_index;
-            subr[1] = subr[3] - rows + 2 * radius_index;
-            srcImgROI = srcImg(Range(subr[1], subr[3]), Range(subr[0], subr[2]));
-            SumImgROI = SumImg2[top_point](Range(radius_index, rows - radius_index),
-                                           Range(radius_index, cols - radius_index));
-            SumImgROI += srcImgROI;
-        }
         for (; angle_index < 360; angle_index++) {
-            subr[0] = (int) (radius_index * cos(angle_index * ANGLE_TO_PI)) + radius_index;
-            subr[3] = (int) (rows + radius_index * sin(angle_index * ANGLE_TO_PI)) - radius_index;
-            subr[1] = subr[3] - rows + 2 * radius_index;
+            subr[0] = (int) (radius_index * cos(angle_index * ANGLE_TO_PI) + radius_index);
+            subr[1] = (int) (radius_index * sin(angle_index * ANGLE_TO_PI) + radius_index);
             subr[2] = cols - 2 * radius_index + subr[0];
+            subr[3] = rows - 2 * radius_index + subr[1];
             srcImgROI = srcImg(Range(subr[1], subr[3]), Range(subr[0], subr[2]));
             SumImgROI = SumImg2[top_point](Range(radius_index, rows - radius_index),
                                            Range(radius_index, cols - radius_index));
@@ -115,12 +100,12 @@ int ustc_Find_Circles_By_Difference(Mat colorImg, int min_radius, int max_radius
     }
     
     //Continue
-    for (radius_index = min_radius + 5; radius_index <= max_radius + 5; radius_index++, top_point++, top_point %= 11) {
+    for (radius_index = min_radius + 5; radius_index < max_radius + 5; radius_index++, top_point++, top_point %= 11) {
         angle_index = 0;
         
-        for (; angle_index < 90; angle_index++) {
-            subr[0] = (int) (radius_index * cos(angle_index * ANGLE_TO_PI)) + radius_index;
-            subr[1] = (int) (radius_index * sin(angle_index * ANGLE_TO_PI)) + radius_index;
+        for (; angle_index < 180; angle_index++) {
+            subr[0] = (int) (radius_index * cos(angle_index * ANGLE_TO_PI) + radius_index);
+            subr[1] = (int) (radius_index * sin(angle_index * ANGLE_TO_PI) + radius_index);
             subr[2] = cols - 2 * radius_index + subr[0];
             subr[3] = rows - 2 * radius_index + subr[1];
             srcImgROI = srcImg(Range(subr[1], subr[3]), Range(subr[0], subr[2]));
@@ -128,33 +113,12 @@ int ustc_Find_Circles_By_Difference(Mat colorImg, int min_radius, int max_radius
                                            Range(radius_index, cols - radius_index));
             SumImgROI += srcImgROI;
         }
-        for (; angle_index < 180; angle_index++) {
-            subr[0] = (int) (radius_index * cos(angle_index * ANGLE_TO_PI)) + radius_index;
-            subr[3] = (int) (rows + radius_index * sin(angle_index * ANGLE_TO_PI)) - radius_index;
-            subr[1] = subr[3] - rows + 2 * radius_index;
-            subr[2] = cols - 2 * radius_index + subr[0];
-            srcImgROI = srcImg(Range(subr[1], subr[3]), Range(subr[0], subr[2]));
-            SumImgROI = SumImg2[top_point](Range(radius_index, rows - radius_index),
-                                           Range(radius_index, cols - radius_index));
-            SumImgROI += srcImgROI;
-            
-        }
         
-        for (; angle_index < 270; angle_index++) {
-            subr[2] = (int) (cols + radius_index * cos(angle_index * ANGLE_TO_PI)) - radius_index;
-            subr[3] = (int) (rows + radius_index * sin(angle_index * ANGLE_TO_PI)) - radius_index;
-            subr[0] = subr[2] - cols + 2 * radius_index;
-            subr[1] = subr[3] - rows + 2 * radius_index;
-            srcImgROI = srcImg(Range(subr[1], subr[3]), Range(subr[0], subr[2]));
-            SumImgROI = SumImg2[top_point](Range(radius_index, rows - radius_index),
-                                           Range(radius_index, cols - radius_index));
-            SumImgROI += srcImgROI;
-        }
         for (; angle_index < 360; angle_index++) {
-            subr[0] = (int) (radius_index * cos(angle_index * ANGLE_TO_PI)) + radius_index;
-            subr[3] = (int) (rows + radius_index * sin(angle_index * ANGLE_TO_PI)) - radius_index;
-            subr[1] = subr[3] - rows + 2 * radius_index;
+            subr[0] = (int) (radius_index * cos(angle_index * ANGLE_TO_PI) + radius_index);
+            subr[1] = (int) (radius_index * sin(angle_index * ANGLE_TO_PI) + radius_index);
             subr[2] = cols - 2 * radius_index + subr[0];
+            subr[3] = rows - 2 * radius_index + subr[1];
             srcImgROI = srcImg(Range(subr[1], subr[3]), Range(subr[0], subr[2]));
             SumImgROI = SumImg2[top_point](Range(radius_index, rows - radius_index),
                                            Range(radius_index, cols - radius_index));
@@ -199,9 +163,20 @@ int ustc_Find_Circles_By_Difference(Mat colorImg, int min_radius, int max_radius
                 
                 int getflag = 1;
                 
-                int inner_r_begin = r - 5, inner_r_end = r + 5;
-                int inner_rows_index_begin = rows_index - 5, inner_rows_index_end = rows_index + 5;
-                int inner_cols_index_begin = cols_index - 5, inner_cols_index_end = cols_index + 5;
+                int inner_r_begin = r - min_radius_dist, inner_r_end = r + min_radius_dist + 1;
+                int inner_rows_index_begin = rows_index - min_center_dist, inner_rows_index_end = rows_index + min_center_dist + 1;
+                int inner_cols_index_begin = cols_index - min_center_dist, inner_cols_index_end = cols_index + min_center_dist + 1;
+                
+                if (inner_r_begin < 0 ) inner_r_begin = 0;
+                else if(inner_r_end > diffimg_lens) inner_r_end = diffimg_lens;
+
+                if (inner_rows_index_begin < 0 ) inner_rows_index_begin = 0;
+                else if(inner_rows_index_end > r_index_end)  inner_rows_index_end = r_index_end;
+
+                if (inner_cols_index_begin < 0 ) inner_cols_index_begin = 0;
+                else if(inner_cols_index_end > c_index_end) inner_cols_index_end = c_index_end;
+                
+                
                 for (int i = inner_r_begin; i < inner_r_end; i++) {
                     uchar *ptr_inner_diffimg = diffimg[i].data;
                     for (int j = inner_rows_index_begin; j < inner_rows_index_end; j++) {
@@ -234,4 +209,3 @@ int ustc_Find_Circles_By_Difference(Mat colorImg, int min_radius, int max_radius
     delete[] diffimg;
     return MY_OK;
 }
-
