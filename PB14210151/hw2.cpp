@@ -1,3 +1,4 @@
+#include "opencv2/opencv.hpp"
 #define MY_OK 1
 #define MY_FAIL -1
 
