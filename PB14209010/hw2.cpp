@@ -188,15 +188,7 @@ int ustc_Find_Circles_By_Difference(
 					int b_diff = abs(mean_pixel_diff_line[width_x_3] / 360);
 					int g_diff = abs(mean_pixel_diff_line[width_x_3 + 1] / 360);
 					int r_diff = abs(mean_pixel_diff_line[width_x_3 + 2] / 360);
-					/*if (b_diff < 0) {
-						b_diff = -b_diff;
-					}
-					if (g_diff < 0) {
-						g_diff = -g_diff;
-					}
-					if (r_diff < 0) {
-						r_diff = -r_diff;
-					}*/
+
 					int circle_num = circle_cnt_tmp;
 					int diff[MAX_CIRCLES];
 					if ((b_diff >= max_circle_diff || g_diff >= max_circle_diff || r_diff >= max_circle_diff) && circle_num < MAX_CIRCLES) {
@@ -206,15 +198,7 @@ int ustc_Find_Circles_By_Difference(
 							int x_diff = abs(x[i] - width_x);
 							int y_diff = abs(y[i] - height_y);
 							int radius_diff = abs(radius[i] - circle_r);
-							/*if (x_diff < 0) {
-								x_diff = -x_diff;
-							}
-							if (y_diff < 0) {
-								y_diff = -y_diff;
-							}
-							if (radius_diff < 0) {
-								radius_diff = -radius_diff;
-							}*/
+							
 							if (x_diff < min_center_dist && y_diff < min_center_dist && radius_diff < min_radius_dist) {
 								if (b_diff + g_diff + r_diff <= diff[i]) {
 									flag = false;
