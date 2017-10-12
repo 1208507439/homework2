@@ -44,12 +44,10 @@ int ustc_Find_Circles_By_Difference(Mat colorImg, int min_radius, int max_radius
 	}
 
 	Mat mean_pixel_diff(height, width, CV_32SC3, Scalar(0, 0, 0));
-	Mat pixel_num(height, width, CV_32SC3, Scalar(0, 0, 0));
 	Mat edge_num(height, width, CV_32SC3, Scalar(0, 0, 0));
 
 	for (int circle_r = min_radius; circle_r <= max_radius; circle_r++) {
 		mean_pixel_diff.setTo(Scalar(0, 0, 0));
-		pixel_num.setTo(Scalar(0, 0, 0));
 		edge_num.setTo(Scalar(0, 0, 0));
 		for (int theta = 0; theta < 360; theta++) {
 			int start_x, end_x, start_y, end_y;
@@ -59,43 +57,31 @@ int ustc_Find_Circles_By_Difference(Mat colorImg, int min_radius, int max_radius
 			int offset_y_r = circle_r*my_neg_sin[theta];
 			int offset_x_out = (int)((circle_r + CIRCLE_RADIUS_DIFF)*my_cos[theta]) * 3;
 			int offset_y_out = (circle_r + CIRCLE_RADIUS_DIFF)*my_neg_sin[theta];
-			if (offset_x_out >= 0) {
-				start_x = 0, end_x = width * 3 - offset_x_out;
-			}
-			else {
-				start_x = -offset_x_out, end_x = width * 3;
-			}
-			if (offset_y_out >= 0) {
-				start_y = 0, end_y = height - offset_y_out;
-			}
-			else {
-				start_y = -offset_y_out, end_y = height;
-			}
+			start_y = circle_r + CIRCLE_RADIUS_DIFF;
+			start_x = start_y * 3;
+			end_y = height - start_y;
+			end_x = width * 3 - start_x;
 			for (int height_y = start_y; height_y < end_y; height_y++) {
 				int32_t *mean_pixel_diff_line = mean_pixel_diff.ptr<int32_t>(height_y);
-				int32_t *pixel_num_line = pixel_num.ptr<int32_t>(height_y);
 				int32_t *edge_num_line = edge_num.ptr<int32_t>(height_y);
 				uint8_t *colorImg_in_line = colorImg.ptr<uint8_t>(height_y + offset_y_in);
 				uint8_t *colorImg_out_line = colorImg.ptr<uint8_t>(height_y + offset_y_out);
 				uint8_t *mag_binary_line = mag_binary.ptr<uint8_t>(height_y + offset_y_r);
 				for (int width_x = start_x; width_x < end_x; width_x++) {
 					mean_pixel_diff_line[width_x] += colorImg_in_line[width_x + offset_x_in] - colorImg_out_line[width_x + offset_x_out];
-					pixel_num_line[width_x]++;
 					edge_num_line[width_x] += mag_binary_line[width_x + offset_x_r];
 				}
 			}
 		}
 		for (int height_y = 0; height_y < height; height_y++) {
 			int32_t *mean_pixel_diff_line = mean_pixel_diff.ptr<int32_t>(height_y);
-			int32_t *pixel_num_line = pixel_num.ptr<int32_t>(height_y);
 			int32_t *edge_num_line = edge_num.ptr<int32_t>(height_y);
 			for (int width_x = 0; width_x < width; width_x++) {
 				int width_x_3 = 3 * width_x;
 				if (edge_num_line[width_x_3] >= EDGE_NUM_TH || edge_num_line[width_x_3 + 1] >= EDGE_NUM_TH || edge_num_line[width_x_3 + 2] >= EDGE_NUM_TH) {
-					int pixel_num = pixel_num_line[width_x_3];
-					int b_diff = mean_pixel_diff_line[width_x_3] / pixel_num;
-					int g_diff = mean_pixel_diff_line[width_x_3 + 1] / pixel_num;
-					int r_diff = mean_pixel_diff_line[width_x_3 + 2] / pixel_num;
+					int b_diff = mean_pixel_diff_line[width_x_3] / 360;
+					int g_diff = mean_pixel_diff_line[width_x_3 + 1] / 360;
+					int r_diff = mean_pixel_diff_line[width_x_3 + 2] / 360;
 					if (b_diff < 0) {
 						b_diff = -b_diff;
 					}
