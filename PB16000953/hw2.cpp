@@ -5,7 +5,8 @@ using namespace cv;
 using namespace std;
 #define MY_FAIL 0
 #define MY_OK 1
-
+//用于阈值过低的防护，储存中间结果的最大数目，超过则返回失败
+#define MAX_NUM 10000 
 //三角函数打表
 float sin_map[360]={
 	0.000000,0.017452,
@@ -647,7 +648,7 @@ int ustc_Find_Circles_By_Difference(
 				}//end if
 
 				 //阈值防护，阈值过低圆的数量过大会使得结果不正确
-				if (ll > 15000) 
+				if (ll > MAX_NUM) 
 				{
 					cout << "找到的圆太多了，需要调高阈值以获得正确的结果" << endl;
 					return MY_FAIL;
