@@ -290,7 +290,6 @@ int ustc_Find_Circles_By_Difference(
 						break;
 				}
 				r -= add_r;
-				center_index -= add_r;
 				add_r = 0;
 			}
 		}
