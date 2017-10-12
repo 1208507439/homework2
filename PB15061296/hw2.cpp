@@ -1,15 +1,15 @@
-int ustc_Find_Circles_By_Difference(             //差分法找圆
-	Mat colorImg,          //彩色图
-	int min_radius,        //最小半径
-	int max_radius,        //最大半径
-	int min_center_dist,   //同半径圆心最小差值
-	int min_radius_dist,   //同圆心半径最小差值
-	int max_circle_diff,   //阈值
-	int* x,                //x位置数组
-	int* y,                //y位置数组
-	int* radius,           //半径数组
-	int* circle_cnt,             //圆的数目   
-	int max_circle)        //最大圆数
+int ustc_Find_Circles_By_Difference(             
+	Mat colorImg,          
+	int min_radius,        
+	int max_radius,        
+	int min_center_dist,   
+	int min_radius_dist,   
+	int max_circle_diff,   
+	int* x,                
+	int* y,               
+	int* radius,           
+	int* circle_cnt,             
+	int max_circle)        
 {
 	if (NULL == colorImg.data)
 	{
