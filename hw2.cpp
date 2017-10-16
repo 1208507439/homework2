@@ -155,10 +155,12 @@ int ustc_Find_Circles_By_Differece(Mat colorImg, int min_radius, int max_radius,
 				{
 					cout << "the max_circle_diff is too small,please change it." << endl;
 					return MY_FAIL;
+
 				}
 			}
 		}
 	}
+  
 	for (int i = 0; i < circle_num; i++)
 	{
 		for (int j = i + 1; j < circle_num; j++)
