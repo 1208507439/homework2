@@ -78,7 +78,6 @@ int ustc_Find_Circles_By_Difference(
     int cent_dist;
 	int x_dist, y_dist;
 
-	
 	for (row_i = 89; row_i >= 0; row_i--)
 	{
 		COS[row_i] = cos(row_i * 0.0174533f);
@@ -93,12 +92,12 @@ int ustc_Find_Circles_By_Difference(
 		}
 	}
 	
-	for (i = row * col - 1;i >= 0;i--)
+	for (row_i = row * col - 1; row_i >= 0; row_i--)
 	{
-		j = 3 * i;
-		*(data_B + i) = *(colorImg.data + j);
-		*(data_G + i) = *(colorImg.data + j + 1);
-		*(data_R + i) = *(colorImg.data + j + 2);
+		j = 3 * row_i;
+		*(data_B + row_i) = *(colorImg.data + j);
+		*(data_G + row_i) = *(colorImg.data + j + 1);
+		*(data_R + row_i) = *(colorImg.data + j + 2);
 	}
 
 	memset(x_center, -1, 16000);
@@ -211,7 +210,6 @@ int ustc_Find_Circles_By_Difference(
 		}
 	}
 
-
 	circle_num_tmp = circle_num;
 	
 	for (i = circle_num_tmp - 1; i > 1; i--)
@@ -273,7 +271,6 @@ int ustc_Find_Circles_By_Difference(
 			}
 		}
 	}
-	
 
 	if (circle_num - 1 <= max_circle)
 	{
