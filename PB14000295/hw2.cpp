@@ -78,11 +78,10 @@ int ustc_Find_Circles_By_Difference(
     int cent_dist;
 	int x_dist, y_dist;
 
-	
-	for (i = 89;i >= 0;i--)
+	for (row_i = 89; row_i >= 0; row_i--)
 	{
-		COS[i] = cos(i*0.0174533f);//i*2pi/360
-		SIN[i] = sin(i*0.0174533f);
+		COS[row_i] = cos(row_i * 0.0174533f);
+		SIN[row_i] = sin(row_i * 0.0174533f);
 	}
 	for (r = 319; r >= 0; r--)
 	{
@@ -93,12 +92,12 @@ int ustc_Find_Circles_By_Difference(
 		}
 	}
 	
-	for (i = row*col - 1;i >= 0;i--)
+	for (row_i = row * col - 1; row_i >= 0; row_i--)
 	{
-		j = 3 * i;
-		*(data_B + i) = *(colorImg.data + j);
-		*(data_G + i) = *(colorImg.data + j + 1);
-		*(data_R + i) = *(colorImg.data + j + 2);
+		j = 3 * row_i;
+		*(data_B + row_i) = *(colorImg.data + j);
+		*(data_G + row_i) = *(colorImg.data + j + 1);
+		*(data_R + row_i) = *(colorImg.data + j + 2);
 	}
 
 	memset(x_center, -1, 16000);
@@ -115,7 +114,7 @@ int ustc_Find_Circles_By_Difference(
 				gray_sum_R[k] = 0;
 				point_num[k] = 0;
 			}
-			for (r = r_bound_low;r <= r_bound_up;r++)
+			for (r = r_bound_low; r <= r_bound_up; r++)
 			{
 				for (theta = 89; theta > 0; theta--)
 				{
@@ -167,7 +166,7 @@ int ustc_Find_Circles_By_Difference(
 					gray_sum_R[r] /= point_num[r];
 				}
 			}
-			for (r = min_radius;r <= max_radius;r++)
+			for (r = min_radius; r <= max_radius; r++)
 			{
 				if (point_num[r] == 356)
 				{
@@ -210,7 +209,6 @@ int ustc_Find_Circles_By_Difference(
 			}
 		}
 	}
-
 
 	circle_num_tmp = circle_num;
 	
@@ -273,7 +271,6 @@ int ustc_Find_Circles_By_Difference(
 			}
 		}
 	}
-	
 
 	if (circle_num - 1 <= max_circle)
 	{
@@ -310,25 +307,25 @@ int ustc_Find_Circles_By_Difference(
 			}
 		}
 		circle_num = i;
-		for (j = max_circle; j < circle_num; j++)
+		for (col_j = max_circle; col_j < circle_num; col_j++)
 		{
-			for (i = 0; i < max_circle; i++)
+			for (row_i = 0; row_i < max_circle; row_i++)
 			{
-				if (diff_gray_flow[i] < diff_gray_flow[j])
+				if (diff_gray_flow[row_i] < diff_gray_flow[col_j])
 				{
-					x_center_flow[i] = x_center_flow[j];
-					y_center_flow[i] = y_center_flow[j];
-					r_tmp_flow[i] = r_tmp_flow[j];
-					diff_gray_flow[i] = diff_gray_flow[j];
-					i = max_circle;
+					x_center_flow[row_i] = x_center_flow[col_j];
+					y_center_flow[row_i] = y_center_flow[col_j];
+					r_tmp_flow[row_i] = r_tmp_flow[col_j];
+					diff_gray_flow[row_i] = diff_gray_flow[col_j];
+					row_i = max_circle;
 				}
 			}
 		}
-		for (i = 0; i < max_circle; i++)
+		for (row_i = 0; row_i < max_circle; row_i++)
 		{
-			x[i] = x_center_flow[i];
-			y[i] = y_center_flow[i];
-			radius[i] = r_tmp_flow[i];
+			x[row_i] = x_center_flow[row_i];
+			y[row_i] = y_center_flow[row_i];
+			radius[row_i] = r_tmp_flow[row_i];
 		}
 	}
 
