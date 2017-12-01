@@ -143,7 +143,7 @@ int ustc_Find_Circles_By_Difference(Mat colorImg, int min_radius, int max_radius
 						{
 							int dx = x[k] - col_j;
 							int dy = y[k] - row_i;
-							if (dx*dx + dy*dy <= dl)
+							if (dx*dx + dy*dy <= dl*dl)
 							{
 								int dr = radius[k] - (r + 1);
 								dr = dr >= 0 ? dr : -dr;
