@@ -57,10 +57,30 @@ int ustc_Find_Circles_By_Difference(Mat colorImg, int min_radius, int max_radius
 			int offset_y_r = circle_r*my_neg_sin[theta];
 			int offset_x_out = (int)((circle_r + CIRCLE_RADIUS_DIFF)*my_cos[theta]) * 3;
 			int offset_y_out = (circle_r + CIRCLE_RADIUS_DIFF)*my_neg_sin[theta];
-			start_y = circle_r + CIRCLE_RADIUS_DIFF;
-			start_x = start_y * 3;
-			end_y = height - start_y;
-			end_x = width * 3 - start_x;
+			if (-offset_y_out > circle_r) {
+				start_y = -offset_y_out;
+			}
+			else {
+				start_y = circle_r;
+			}
+			if (offset_y_out > circle_r) {
+				end_y = height - offset_y_out;
+			}
+			else {
+				end_y = height - circle_r;
+			}
+			if (-offset_x_out > circle_r * 3) {
+				start_x = -offset_x_out;
+			}
+			else {
+				start_x = circle_r * 3;
+			}
+			if (offset_x_out > circle_r * 3) {
+				end_x = width * 3 - offset_x_out;
+			}
+			else {
+				end_x = (width - circle_r) * 3;
+			}
 			for (int height_y = start_y; height_y < end_y; height_y++) {
 				int32_t *mean_pixel_diff_line = mean_pixel_diff.ptr<int32_t>(height_y);
 				int32_t *edge_num_line = edge_num.ptr<int32_t>(height_y);
